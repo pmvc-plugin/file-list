@@ -22,6 +22,7 @@ function get($path,$pattern='*',$layer=0){
     while(false !== ($filename = $d->read())){
         if($filename == '.' || $filename == '..') continue;
         $wholePath = $path.$filename;
+        $realPath = realpath($wholePath);
         if( is_dir($wholePath) ){
             if( $this->subDirLayer === 'max' || $this->subDirLayer < $layer ){
                 $f2=$this->get($wholePath.'/',$pattern,$layer++);
@@ -34,8 +35,8 @@ function get($path,$pattern='*',$layer=0){
             $key = str_replace($this->filterKey,'',$wholePath);
             $f[$key]=array(
                     'name'=>$filename,
-                    'mtime'=>filemtime($wholePath),
-                    'wholePath'=>realpath($wholePath),
+                    'mtime'=>filemtime($realPath),
+                    'wholePath'=>$realPath,
                     );
             if(is_file($wholePath) && $this->checksum){
                 $f[$key]['hash']=sha1_file($wholePath);

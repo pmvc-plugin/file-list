@@ -1,11 +1,11 @@
 <?php
-namespace PMVC\PlugIns;
+namespace PMVC\PlugIn\file_list;
 
 \PMVC\l(__DIR__.'/class.file_list.php');
 
-${_INIT_CONFIG}[_CLASS] = 'PMVC\PlugIns\PMVC_PLUGIN_FileList';
+${_INIT_CONFIG}[_CLASS] = '\PMVC\PlugIn\file_list\file_list';
 
-class PMVC_PLUGIN_FileList extends \PMVC\PLUGIN
+class file_list extends \PMVC\PlugIn
 {
     private $olist;
     function init(){
