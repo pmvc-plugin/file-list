@@ -15,5 +15,18 @@ class file_list extends \PMVC\PlugIn
     function ls(...$p){
         return $this->olist->get(...$p);
     }
+
+    function rmdir($dir){
+        $list = $this->ls($dir);
+        foreach($list as $item){
+            $wholePath = $item['wholePath'];
+            if (is_file($wholePath)) {
+                unlink($wholePath);
+            } elseif (is_dir($wholePath)) {
+                rmdir($wholePath);
+            }
+        }
+        rmdir($dir);
+    }
 }
 ?>
