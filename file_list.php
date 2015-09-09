@@ -1,18 +1,21 @@
 <?php
 namespace PMVC\PlugIn\file_list;
 
-\PMVC\l(__DIR__.'/class.file_list.php');
+\PMVC\l(__DIR__.'/src/FileList.php');
 
-${_INIT_CONFIG}[_CLASS] = '\PMVC\PlugIn\file_list\file_list';
+${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\file_list';
 
 class file_list extends \PMVC\PlugIn
 {
     private $olist;
     function init(){
-        $this->olist = new \FileList(); 
+        $this->olist = new FileList(); 
     }
     
     function ls(...$p){
+        if ($this['hash']) {
+            $this->olist->setChecksum($this['hash']);
+        }
         return $this->olist->get(...$p);
     }
 
