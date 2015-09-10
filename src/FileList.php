@@ -36,7 +36,7 @@ class FileList
             }
             $this->debug($key);
             $realPath = (is_link($wholePath)) ? $wholePath : realpath($wholePath);
-            if (is_dir($wholePath)) {
+            if ( is_dir($wholePath) && !is_link($wholePath)) {
                 if ($this->subDirLayer === 'max' || $this->subDirLayer < $layer) {
                     $f2=$this->get($wholePath.'/', $pattern, $layer++);
                     if (is_array($f2)) {
