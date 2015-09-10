@@ -9,6 +9,7 @@ class FileList
     private $filterKey='';
     private $subDirLayer='max';
     private $checksum;
+    private $exclude = array('.','..');
 
     public function __construct($bool=false)
     {
@@ -21,15 +22,14 @@ class FileList
     public function get($path, $pattern='*', $layer=0)
     {
         $path=$this->EndWithSlash($path);
-        $d = dir($path);
+        $d = scandir($path);
         $f = array();
-        while ($d->read()) {
-            $filename = $d->read();
-            if (!$filename || $filename == '.' || $filename == '..') {
+        foreach($d as $filename) {
+            if (in_array($filename,$this->exclude)) {
                 continue;
             }
             $wholePath = $path.$filename;
-            $realPath = realpath($wholePath);
+            $realPath = (is_link($wholePath)) ? $wholePath : realpath($wholePath);
             if (is_dir($wholePath)) {
                 if ($this->subDirLayer === 'max' || $this->subDirLayer < $layer) {
                     $f2=$this->get($wholePath.'/', $pattern, $layer++);
@@ -40,10 +40,11 @@ class FileList
             }
             if (fnmatch($pattern, $wholePath)) {
                 $key = str_replace($this->filterKey, '', $wholePath);
+                $finialPath = $realPath ?: $wholePath;
                 $f[$key]=array(
                     'name'=>$filename,
                     'mtime'=>filemtime($realPath),
-                    'wholePath'=>$realPath,
+                    'wholePath'=>$finialPath,
                 );
                 if (is_file($wholePath) && $this->checksum) {
                     $f[$key]['hash']=sha1_file($wholePath);
