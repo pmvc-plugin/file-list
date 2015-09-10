@@ -10,6 +10,7 @@ class FileList
     private $subDirLayer='max';
     private $checksum;
     private $exclude = array('.','..');
+    public $debug = false;
 
     public function __construct($bool=false)
     {
@@ -33,6 +34,7 @@ class FileList
             ) {
                 continue;
             }
+            $this->debug($key);
             $realPath = (is_link($wholePath)) ? $wholePath : realpath($wholePath);
             if (is_dir($wholePath)) {
                 if ($this->subDirLayer === 'max' || $this->subDirLayer < $layer) {
@@ -55,6 +57,14 @@ class FileList
             }
         }
         return $f;
+    }
+
+    private function debug($str)
+    {
+        if (!$this->debug) {
+            return null;
+        }
+        var_dump($str);
     }
 
     public function getSortDir()

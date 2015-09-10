@@ -25,6 +25,9 @@ class file_list extends \PMVC\PlugIn
         if ($this['prefix']) {
             $this->olist->filterKey($this['prefix']);
         }
+        if ($this['debug']) {
+            $this->olist->debug = $this['debug'];
+        }
         return $this->olist->get(...$p);
     }
 
