@@ -25,10 +25,13 @@ class FileList
         $d = scandir($path);
         $f = array();
         foreach($d as $filename) {
-            if (in_array($filename,$this->exclude)) {
+            $wholePath = $path.$filename;
+            $key = str_replace($this->filterKey, '', $wholePath);
+            if ( in_array($filename,$this->exclude) ||
+                 in_array($key,$this->exclude)
+            ) {
                 continue;
             }
-            $wholePath = $path.$filename;
             $realPath = (is_link($wholePath)) ? $wholePath : realpath($wholePath);
             if (is_dir($wholePath)) {
                 if ($this->subDirLayer === 'max' || $this->subDirLayer < $layer) {
@@ -39,7 +42,6 @@ class FileList
                 }
             }
             if (fnmatch($pattern, $wholePath)) {
-                $key = str_replace($this->filterKey, '', $wholePath);
                 $finialPath = $realPath ?: $wholePath;
                 $f[$key]=array(
                     'name'=>$filename,
@@ -54,18 +56,28 @@ class FileList
         return $f;
     }
 
-    public function getDirSort()
+    public function getSortDir()
     {
         $args = &func_get_args();
-        $a = call_user_func_array(array($this,get), $args);
+        $a = call_user_func_array(array($this,'get'), $args);
         ksort($a);
         return $a;
     }
 
     /**
+     * add exclude 
+     */
+    public function addExclude($val)
+    {
+        if (!in_array($val,$this->exclude)) {
+            $this->exclude[] = $val;
+        }
+    }
+
+    /**
      * filter the array key, useful in absolute path 
      */
-    public function setFilterKey($val)
+    public function filterKey($val)
     {
         $this->filterKey = $val;
     }

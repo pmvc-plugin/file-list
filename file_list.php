@@ -16,6 +16,15 @@ class file_list extends \PMVC\PlugIn
         if ($this['hash']) {
             $this->olist->setChecksum($this['hash']);
         }
+        if ($this['exclude']) {
+            $excludes = \PMVC\splitDir($this['exclude']); 
+            foreach ($excludes as $exclude) {
+                $this->olist->addExclude($exclude);
+            }
+        }
+        if ($this['prefix']) {
+            $this->olist->filterKey($this['prefix']);
+        }
         return $this->olist->get(...$p);
     }
 
