@@ -24,9 +24,10 @@ class FileList
         $path=$this->EndWithSlash($path);
         $d = scandir($path);
         $f = array();
+        $filterKeyLen = strlen($this->filterKey);
         foreach($d as $filename) {
             $wholePath = $path.$filename;
-            $key = str_replace($this->filterKey, '', $wholePath);
+            $key = substr( $wholePath, $filterKeyLen, strlen($wholePath)-$filterKeyLen );
             if ( in_array($filename,$this->exclude) ||
                  in_array($key,$this->exclude)
             ) {
@@ -79,6 +80,9 @@ class FileList
      */
     public function filterKey($val)
     {
+        if ('/'===$val) {
+            return null;
+        }
         $this->filterKey = $val;
     }
 
