@@ -17,6 +17,16 @@ class FileList
         $this->setChecksum($bool);
     }
 
+    public function fnmatch_array($string, $array)
+    {
+        foreach ($array as $a) {
+            if (fnmatch($a, $string)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * extract list on one path 
      */
@@ -29,8 +39,8 @@ class FileList
         foreach($d as $filename) {
             $wholePath = $path.$filename;
             $key = substr( $wholePath, $filterKeyLen, strlen($wholePath)-$filterKeyLen );
-            if ( in_array($filename,$this->exclude) ||
-                 in_array($key,$this->exclude)
+            if ( $this->fnmatch_array($filename,$this->exclude) ||
+                 $this->fnmatch_array($key,$this->exclude)
             ) {
                 continue;
             }
