@@ -10,6 +10,7 @@ class FileList
     private $subDirLayer='max';
     private $checksum;
     private $exclude = array('.','..');
+    private $callBack = null;
     public $debug = false;
 
     public function __construct($bool=false)
@@ -32,6 +33,17 @@ class FileList
      */
     public function get($path, $pattern='*', $layer=0)
     {
+        if (!is_dir($path)) {
+            $pathInfo = pathinfo($path);
+            if (is_dir($pathInfo['dirname'])) {
+                $path = $pathInfo['dirname'];
+                if (!empty($pathInfo['basename'])) {
+                    $pattern = $pathInfo['basename'];
+                }
+            } else {
+                return !trigger_error('['.$path.'] is not a folder');
+            }
+        }
         $path=$this->EndWithSlash($path);
         $d = scandir($path);
         $f = array();
@@ -58,11 +70,13 @@ class FileList
                 $finialPath = $realPath ?: $wholePath;
                 $f[$key]=array(
                     'name'=>$filename,
-                    'mtime'=>filemtime($realPath),
                     'wholePath'=>$finialPath,
                 );
                 if (is_file($wholePath) && $this->checksum) {
                     $f[$key]['hash']=sha1_file($wholePath);
+                }
+                if ($this->callBack) {
+                    $f[$key] = call_user_func($this->callBack,$f[$key]);
                 }
             }
         }
@@ -130,6 +144,16 @@ class FileList
     public function setChecksum($bool)
     {
         $this->checksum=$bool;
+    }
+
+    /**
+     * callBack 
+     */
+    public function setCallBack($func)
+    {
+        if (is_callable($func)) {
+            $this->callBack = $func;
+        }
     }
 
     /**

@@ -28,6 +28,9 @@ class file_list extends \PMVC\PlugIn
         if ($this['debug']) {
             $this->olist->debug = $this['debug'];
         }
+        if ($this['callBack']) {
+            $this->olist->setCallBack($this['callBack']);
+        }
         return $this->olist->get(...$p);
     }
 
