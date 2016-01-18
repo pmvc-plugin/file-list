@@ -2,6 +2,8 @@
 namespace PMVC\PlugIn\file_list;
 
 \PMVC\l(__DIR__.'/src/FileList.php');
+\PMVC\l(__DIR__.'/src/FileSizeHelper.php');
+\PMVC\l(__DIR__.'/src/FileTime.php');
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\file_list';
 
@@ -32,6 +34,17 @@ class file_list extends \PMVC\PlugIn
             $this->olist->setCallBack($this['callBack']);
         }
         return $this->olist->get(...$p);
+    }
+
+    function size($file)
+    {
+        return new FileSizeHelper($file);
+    }
+
+    function times($file)
+    {
+        $t =  new FileTime($file);
+        return $t->toString();
     }
 
     function rmdir($dir){

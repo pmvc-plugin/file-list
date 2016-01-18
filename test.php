@@ -8,5 +8,4 @@ class FileListTest extends PHPUnit_Framework_TestCase
         $files = \PMVC\plug('file_list')->ls('./');
         $this->assertTrue(!empty($files['./file_list.php']));
     }
-
 }
