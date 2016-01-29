@@ -47,6 +47,18 @@ class file_list extends \PMVC\PlugIn
         return $t->toString();
     }
 
+    function tail(...$p)
+    {
+        \PMVC\l(__DIR__.'/src/FileReader.php');
+        return FileReader::tail(...$p);
+    }
+
+    function read(...$p)
+    {
+        \PMVC\l(__DIR__.'/src/FileReader.php');
+        return FileReader::read(...$p);
+    }
+
     function rmdir($dir){
         $list = $this->ls($dir);
         foreach($list as $item){
