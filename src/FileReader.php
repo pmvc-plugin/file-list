@@ -55,21 +55,25 @@ class FileReader
         return $output; 
     }
 
-    static function read($filename, $buffer = 4096)
+    static function read($filename, $callback, $bufferSize = 4096)
     {
         // Open the file
         $f = fopen($filename, "rb");
         if ($f) {
-            $content = null;
+            $content = '' ;
             while (!feof($f)) {
-                $buffer = explode("\n", fgets($f, 4096));
-                var_dump($buffer);
+                $buffer = explode("\n", fgets($f, $bufferSize));
+                $content.= $buffer[0];
                 if (count($buffer)>1) {
-
+                    array_shift($buffer); 
+                    foreach ($buffer as $b) {
+                        call_user_func($callback,$content);
+                        $content = $b;
+                    }
                 }
-                break; 
             }
-            fclose($handle);
+            fclose($f);
         }
     }
+
 }
