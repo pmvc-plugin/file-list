@@ -7,8 +7,11 @@ namespace PMVC\PlugIn\file_list;
 
 class FileReader
 {
-    static function tail($filename, $lines = 10, $buffer = 4096)
+    static function tail($filename, $callback, $lines = null, $bufferSize = 4096)
     {
+        if (is_null($lines)) {
+            $lines = 10;
+        }
         // Open the file
         $f = fopen($filename, "rb");
 
@@ -17,7 +20,11 @@ class FileReader
 
         // Read it and adjust line number if necessary
         // (Otherwise the result would be wrong if file doesn't end with a blank line)
-        if(fread($f, 1) != "\n") $lines -= 1;
+        if(fread($f, 1) != "\n") { 
+            $lines -= 1;
+        } else {
+            fseek($f, -1, SEEK_CUR);
+        }
 
         // Start reading
         $output = '';
@@ -27,32 +34,32 @@ class FileReader
         while(ftell($f) > 0 && $lines >= 0)
         {
             // Figure out how far back we should jump
-            $seek = min(ftell($f), $buffer);
+            $seek = min(ftell($f), $bufferSize);
 
             // Do the jump (backwards, relative to where we are)
             fseek($f, -$seek, SEEK_CUR);
 
             // Read a chunk and prepend it to our output
-            $output = ($chunk = fread($f, $seek)).$output;
-
+            $chunk = fread($f, $seek);
+            $buffer = explode("\n", $chunk);
+            $buffer = array_reverse($buffer);
+            $output= $buffer[0].$output;
+            if (count($buffer)>1) {
+                array_shift($buffer); 
+                foreach ($buffer as $b) {
+                    if ($lines<0) {
+                        break;
+                    }
+                    call_user_func($callback,$output);
+                    $output = $b;
+                    $lines --;
+                }
+            }
             // Jump back to where we started reading
             fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
-
-            // Decrease our line counter
-            $lines -= substr_count($chunk, "\n");
         }
-
-        // While we have too many lines
-        // (Because of buffer size we might have read too many)
-        while($lines++ < 0)
-        {
-            // Find first newline and remove all text before that
-            $output = substr($output, strpos($output, "\n") + 1);
-        }
-
         // Close file and return
         fclose($f); 
-        return $output; 
     }
 
     static function read($filename, $callback, $bufferSize = 4096)
