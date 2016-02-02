@@ -7,11 +7,8 @@ namespace PMVC\PlugIn\file_list;
 
 class FileReader
 {
-    static function tail($filename, $callback, $lines = null, $bufferSize = 4096)
+    static function tail($filename, $callback, $bufferSize = 4096)
     {
-        if (is_null($lines)) {
-            $lines = 10;
-        }
         // Open the file
         $f = fopen($filename, "rb");
 
@@ -20,9 +17,7 @@ class FileReader
 
         // Read it and adjust line number if necessary
         // (Otherwise the result would be wrong if file doesn't end with a blank line)
-        if(fread($f, 1) != "\n") { 
-            $lines -= 1;
-        } else {
+        if(fread($f, 1) === "\n") { 
             fseek($f, -1, SEEK_CUR);
         }
 
@@ -31,7 +26,9 @@ class FileReader
         $chunk = '';
 
         // While we would like more
-        while(ftell($f) > 0 && $lines >= 0)
+        $i = 0;
+        $continue = true;
+        while(ftell($f) > 0 && $continue)
         {
             // Figure out how far back we should jump
             $seek = min(ftell($f), $bufferSize);
@@ -47,12 +44,11 @@ class FileReader
             if (count($buffer)>1) {
                 array_shift($buffer); 
                 foreach ($buffer as $b) {
-                    if ($lines<0) {
+                    $continue = call_user_func($callback,$output);
+                    $output = $b;
+                    if (!$continue) {
                         break;
                     }
-                    call_user_func($callback,$output);
-                    $output = $b;
-                    $lines --;
                 }
             }
             // Jump back to where we started reading
