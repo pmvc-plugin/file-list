@@ -63,15 +63,19 @@ class FileReader
         // Open the file
         $f = fopen($filename, "rb");
         if ($f) {
-            $content = '' ;
-            while (!feof($f)) {
+            $content = '';
+            $continue = true;
+            while (!feof($f) && $continue) {
                 $buffer = explode("\n", fgets($f, $bufferSize));
                 $content.= $buffer[0];
                 if (count($buffer)>1) {
                     array_shift($buffer); 
                     foreach ($buffer as $b) {
-                        call_user_func($callback,$content);
+                        $continue = call_user_func($callback,$content);
                         $content = $b;
+                        if (!$continue) {
+                            break;
+                        }
                     }
                 }
             }
