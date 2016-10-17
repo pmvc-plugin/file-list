@@ -46,7 +46,10 @@ class FileList
         }
         $path=$this->EndWithSlash($path);
         $d = scandir($path);
-        $f = array();
+        if (!$d) {
+            $d = [];
+        }
+        $f = [];
         $maskKeyLen = $this->_maskKeyLen;
         foreach($d as $filename) {
             $wholePath = $path.$filename;
