@@ -22,8 +22,8 @@ class file_list extends \PMVC\PlugIn
                 $this->olist->addExclude($exclude);
             }
         }
-        if ($this['prefix']) {
-            $this->olist->filterKey($this['prefix']);
+        if ($this['maskKey']) {
+            $this->olist->maskKey($this['maskKey']);
         }
         if ($this['debug']) {
             $this->olist->debug = $this['debug'];

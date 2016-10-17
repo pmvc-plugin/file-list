@@ -6,7 +6,7 @@ namespace PMVC\PlugIn\file_list;
 */
 class FileList
 {
-    private $filterKey='';
+    private $_maskKeyLen = 0;
     private $subDirLayer='max';
     private $checksum;
     private $exclude = array('.','..');
@@ -47,10 +47,10 @@ class FileList
         $path=$this->EndWithSlash($path);
         $d = scandir($path);
         $f = array();
-        $filterKeyLen = strlen($this->filterKey);
+        $maskKeyLen = $this->_maskKeyLen;
         foreach($d as $filename) {
             $wholePath = $path.$filename;
-            $key = substr( $wholePath, $filterKeyLen, strlen($wholePath)-$filterKeyLen );
+            $key = substr( $wholePath, $maskKeyLen, (strlen($wholePath)-$maskKeyLen) );
             if ( $this->fnmatch_array($filename,$this->exclude) ||
                  $this->fnmatch_array($key,$this->exclude)
             ) {
@@ -112,12 +112,12 @@ class FileList
     /**
      * filter the array key, useful in absolute path 
      */
-    public function filterKey($val)
+    public function maskKey($val)
     {
         if ('/'===$val) {
             return null;
         }
-        $this->filterKey = $val;
+        $this->_maskKeyLen = strlen($val);
     }
 
     /**
