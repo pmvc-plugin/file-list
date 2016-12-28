@@ -47,7 +47,9 @@ class tail
                         break;
                     }
                 }
-                $continue = call_user_func($callback,$output);
+                if ($continue) {
+                    $continue = call_user_func($callback,$output);
+                }
             }
             // Jump back to where we started reading
             fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
