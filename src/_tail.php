@@ -36,9 +36,9 @@ class tail
             // Read a chunk and prepend it to our output
             $chunk = fread($f, $seek);
             $buffer = explode("\n", $chunk);
-            $buffer = array_reverse($buffer);
-            $output= $buffer[0].$output;
-            if (count($buffer)>1) {
+            if (!empty($buffer)) {
+                $buffer = array_reverse($buffer);
+                $output= $buffer[0].$output;
                 array_shift($buffer); 
                 foreach ($buffer as $b) {
                     $continue = call_user_func($callback,$output);
@@ -47,9 +47,12 @@ class tail
                         break;
                     }
                 }
+                $continue = call_user_func($callback,$output);
             }
             // Jump back to where we started reading
             fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
+            unset($chunk, $buffer, $output, $b, $seek);
+            $output = '';
         }
         // Close file and return
         fclose($f); 
