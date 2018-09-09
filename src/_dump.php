@@ -4,18 +4,25 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\dump';
 
 class dump
 {
-    function __invoke($filename, $newName = null)
+    function __invoke($filename, $setHeader = true)
     {
-        $this->processHeader($filename, $newName);
+        if ($setHeader) {
+          $this->_processHeader($filename);
+        }
+        $this->_cleanBuffer();
+        readfile($filename);
+    }
+
+    private function _cleanBuffer()
+    {
         $has_buffer = ob_get_contents();
         if (!empty($has_buffer)) {
             ob_clean();
         }
         flush();
-        readfile($filename);
     }
 
-    function processHeader($filename, $newName)
+    private function _processHeader($filename)
     {
         $contentType = \PMVC\plug('file_info')
             ->path($filename) 

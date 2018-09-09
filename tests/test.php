@@ -1,6 +1,8 @@
 <?php
-PMVC\Load::plug();
-PMVC\addPlugInFolders(['../']);
+namespace PMVC;
+
+use PHPUnit_Framework_TestCase;
+
 class FileListTest extends PHPUnit_Framework_TestCase
 {
     private $_plug = 'file_list';
