@@ -4,7 +4,7 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\dump';
 
 class dump
 {
-    function __invoke($filename, $setHeader = true, $dumpOnEmptyHeader = true)
+    function __invoke($filename, $setHeader = true, $dumpOnEmptyHeader = true, $callback = null)
     {
         $header = [];
         if ($setHeader) {
@@ -12,6 +12,9 @@ class dump
         }
         $this->_cleanBuffer();
         if ($dumpOnEmptyHeader || !empty($header)) {
+          if (is_callable($callback)) {
+            $callback();
+          }
           readfile($filename);
         }
     }
