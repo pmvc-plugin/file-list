@@ -6,6 +6,7 @@ class dump
 {
     function __invoke($filename, $setHeader = true, $dumpOnEmptyHeader = true, $callback = null)
     {
+        $isOK = false;
         $header = [];
         if ($setHeader) {
           $header = $this->_processHeader($filename);
@@ -15,8 +16,9 @@ class dump
           if (is_callable($callback)) {
             $callback();
           }
-          readfile($filename);
+          $isOK = readfile($filename);
         }
+        return false !== $isOK;
     }
 
     private function _cleanBuffer()
@@ -25,7 +27,6 @@ class dump
         if (!empty($has_buffer)) {
             ob_clean();
         }
-        flush();
     }
 
     private function _processHeader($filename)
@@ -33,6 +34,9 @@ class dump
         $contentType = \PMVC\plug('file_info')
             ->path($filename) 
             ->getContentType();
+        if (empty($contentType)) {
+          return !trigger_error('Content type not found. ['.$filename.']', E_USER_WARNING);
+        }
         $header = ['Content-Type: '.$contentType];
         \PMVC\dev(function() use (&$header){
             $old = $header;
