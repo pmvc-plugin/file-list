@@ -9,7 +9,7 @@ class dump
         $isOK = false;
         $header = [];
         if ($setHeader) {
-          $header = $this->_processHeader($filename);
+          $header = $this->_processHeader($filename, $setHeader);
         }
         $this->_cleanBuffer();
         if ($dumpOnEmptyHeader || !empty($header)) {
@@ -29,13 +29,21 @@ class dump
         }
     }
 
-    private function _processHeader($filename)
+    private function _processHeader($filename, $ext)
     {
-        $contentType = \PMVC\plug('file_info')
-            ->path($filename) 
-            ->getContentType();
+        if (is_bool($ext)) {
+          $contentType = \PMVC\plug('file_info')->
+              path($filename)-> 
+              getContentType();
+        } else {
+          $contentType = \PMVC\plug('file_info')->
+              getContentType($ext);
+        }
         if (empty($contentType)) {
-          return !trigger_error('Content type not found. ['.$filename.']', E_USER_WARNING);
+          \PMVC\dev(function() use ($filename){
+            return 'Content type not found. ['.$filename.']';
+          }, 'dump');
+          return false;
         }
         $header = ['Content-Type: '.$contentType];
         \PMVC\dev(function() use (&$header){
