@@ -8,11 +8,13 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\file_list';
 class file_list extends \PMVC\PlugIn
 {
     private $olist;
-    function init(){
+    function init()
+    {
         $this->olist = new FileList(); 
     }
     
-    function ls(...$p){
+    function ls(...$p)
+    {
         if ($this['hash']) {
             $this->olist->setChecksum($this['hash']);
         }
@@ -34,7 +36,8 @@ class file_list extends \PMVC\PlugIn
         return $this->olist->get(...$p);
     }
 
-    function rmdir($dir){
+    function rmdir($dir)
+    {
         $list = $this->ls($dir);
         foreach($list as $item){
             $wholePath = $item['wholePath'];

@@ -2,8 +2,8 @@
 namespace PMVC\PlugIn\file_list;
 
 /**
-* Get File list    
-*/
+ * Get File list    
+ */
 class FileList
 {
     private $_maskKeyLen = 0;
@@ -53,15 +53,15 @@ class FileList
         $maskKeyLen = $this->_maskKeyLen;
         foreach($d as $filename) {
             $wholePath = $path.$filename;
-            $key = substr( $wholePath, $maskKeyLen, (strlen($wholePath)-$maskKeyLen) );
-            if ( $this->fnmatch_array($filename,$this->exclude) ||
-                 $this->fnmatch_array($key,$this->exclude)
+            $key = substr($wholePath, $maskKeyLen, (strlen($wholePath)-$maskKeyLen));
+            if ($this->fnmatch_array($filename, $this->exclude) 
+                || $this->fnmatch_array($key, $this->exclude)
             ) {
                 continue;
             }
             $this->debug($key);
             $realPath = (is_link($wholePath)) ? $wholePath : realpath($wholePath);
-            if ( is_dir($wholePath) && !is_link($wholePath)) {
+            if (is_dir($wholePath) && !is_link($wholePath)) {
                 if ($this->subDirLayer === 'max' || $this->subDirLayer < $layer) {
                     $f2=$this->get($wholePath.'/', $pattern, $layer++);
                     if (is_array($f2)) {
@@ -79,7 +79,7 @@ class FileList
                     $f[$key]['hash']=sha1_file($wholePath);
                 }
                 if ($this->callBack) {
-                    $f[$key] = call_user_func($this->callBack,$f[$key]);
+                    $f[$key] = call_user_func($this->callBack, $f[$key]);
                 }
             }
         }
@@ -107,7 +107,7 @@ class FileList
      */
     public function addExclude($val)
     {
-        if (!in_array($val,$this->exclude)) {
+        if (!in_array($val, $this->exclude)) {
             $this->exclude[] = $val;
         }
     }
@@ -161,7 +161,8 @@ class FileList
 
     /**
      * Make sure a string end with a /
-     * @param string $str
+     *
+     * @param  string $str
      * @access static
      * @return string
      */

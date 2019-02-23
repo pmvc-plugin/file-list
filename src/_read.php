@@ -17,7 +17,7 @@ class read
                 if (count($buffer)>1) {
                     array_shift($buffer); 
                     foreach ($buffer as $b) {
-                        $continue = call_user_func($callback,$content);
+                        $continue = call_user_func($callback, $content);
                         $content = $b;
                         if (!$continue) {
                             break;

@@ -9,14 +9,14 @@ class dump
         $isOK = false;
         $header = [];
         if ($setHeader) {
-          $header = $this->_processHeader($filename, $setHeader);
+            $header = $this->_processHeader($filename, $setHeader);
         }
         $this->_cleanBuffer();
         if ($dumpOnEmptyHeader || !empty($header)) {
-          if (is_callable($callback)) {
-            $callback();
-          }
-          $isOK = readfile($filename);
+            if (is_callable($callback)) {
+                $callback();
+            }
+            $isOK = readfile($filename);
         }
         return false !== $isOK;
     }
@@ -32,35 +32,39 @@ class dump
     private function _processHeader($filename, $ext)
     {
         if (is_bool($ext)) {
-          $contentType = \PMVC\plug('file_info')->
-              path($filename)-> 
-              getContentType();
+            $contentType = \PMVC\plug('file_info')->
+              path($filename)
+                ->getContentType();
         } else {
-          $contentType = \PMVC\plug('file_info')->
+            $contentType = \PMVC\plug('file_info')->
               getContentType($ext);
         }
         if (empty($contentType)) {
-          \PMVC\dev(function() use ($filename){
-            return 'Content type not found. ['.$filename.']';
-          }, 'dump');
-          return false;
+            \PMVC\dev(
+                function () use ($filename) {
+                    return 'Content type not found. ['.$filename.']';
+                }, 'dump'
+            );
+            return false;
         }
         $header = ['Content-Type: '.$contentType];
-        \PMVC\dev(function() use (&$header){
-            $old = $header;
-            $header = [];
-            return $old;
-        }, 'dump');
+        \PMVC\dev(
+            function () use (&$header) {
+                $old = $header;
+                $header = [];
+                return ['Origin Header'=>$old];
+            }, 'dump'
+        );
         if (defined('_ROUTER')) {
-          \PMVC\callPlugin(
-            \PMVC\getOption(_ROUTER),
-            'processHeader',
-            [$header]
-          );
+            \PMVC\callPlugin(
+                \PMVC\getOption(_ROUTER),
+                'processHeader',
+                [$header]
+            );
         } else {
-          if (!empty($header[0])) {
-            header($header[0]);
-          }
+            if (!empty($header[0])) {
+                header($header[0]);
+            }
         }
         return $header;
     }

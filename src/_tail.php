@@ -41,14 +41,14 @@ class tail
                 $output= $buffer[0].$output;
                 array_shift($buffer); 
                 foreach ($buffer as $b) {
-                    $continue = call_user_func($callback,$output);
+                    $continue = call_user_func($callback, $output);
                     $output = $b;
                     if (!$continue) {
                         break;
                     }
                 }
                 if ($continue) {
-                    $continue = call_user_func($callback,$output);
+                    $continue = call_user_func($callback, $output);
                 }
             }
             // Jump back to where we started reading
