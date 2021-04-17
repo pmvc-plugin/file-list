@@ -5,7 +5,6 @@
 [![Total Downloads](https://poser.pugx.org/pmvc-plugin/file_list/downloads)](https://packagist.org/packages/pmvc-plugin/file_list) 
 
 # PMVC file list lib 
-===============
 
 Easy let you quick get a file list from a specific folder
 
