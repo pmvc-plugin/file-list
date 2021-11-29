@@ -41,7 +41,7 @@ class FileList
                     $pattern = $pathInfo['basename'];
                 }
             } else {
-                return !trigger_error('['.$path.'] is not a folder');
+                return !trigger_error('['.$pathInfo['dirname'].'] is not a folder');
             }
         }
         $path=$this->EndWithSlash($path);
