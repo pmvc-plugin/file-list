@@ -2,9 +2,9 @@
 
 namespace PMVC;
 
-use PHPUnit_Framework_TestCase;
+use PMVC\TestCase;
 
-class GetContentTest extends PHPUnit_Framework_TestCase
+class GetContentTest extends TestCase
 {
   private $_plug = 'file_list';
 

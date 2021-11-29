@@ -2,8 +2,7 @@
 namespace PMVC\PlugIn\file_list;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\file_list';
 
-\PMVC\l(__DIR__.'/src/FileList.php');
-
+\PMVC\l(__DIR__.'/src/FileList');
 
 class file_list extends \PMVC\PlugIn
 {

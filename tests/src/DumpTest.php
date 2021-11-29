@@ -2,9 +2,9 @@
 
 namespace PMVC;
 
-use PHPUnit_Framework_TestCase;
+use PMVC\TestCase;
 
-class DumpTest extends PHPUnit_Framework_TestCase
+class DumpTest extends TestCase
 {
   private $_plug = 'file_list';
 

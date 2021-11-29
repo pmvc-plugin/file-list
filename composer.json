@@ -1,6 +1,6 @@
 {
     "name": "pmvc-plugin/file_list",
-    "description": "A library let you easy get all file in one specific folder",
+    "description": "A util let you easy get all files or cat big file.",
     "type": "library",
     "homepage": "https://github.com/pmvc-plugin/file_list",
     "keywords": ["file",  "pmvc", "plug", "plug-in"],
@@ -14,6 +14,9 @@
     "require": {
         "pmvc/pmvc": "*",
         "pmvc-plugin/file_info": "*"
+    },
+    "require-dev": {
+        "pmvc-plugin/unit": "*"
     },
     "minimum-stability": "dev"
 }
